@@ -1,33 +1,46 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
 import './App.css'
+import notificationsData from './notifications'
+
+import Container from './components/Container'
+import Row from './components/Row'
+import Column from './components/Column'
+import NotificationList from './components/NotificationList'
+import NotificationItem from './components/NotificationItem'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [notifications, setNotifications] = useState(notificationsData)
+
+  const clearNotification = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id))
+  }
+
+  const clearAll = () => {
+    setNotifications([])
+  }
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <Container>
+      <Row>
+        <Column>
+          <h1>Notifications ({notifications.length})</h1>
+          <button className="btn btn-outline-danger mb-3" onClick={clearAll}>
+            Clear All
+          </button>
+          <NotificationList>
+            {notifications.map(n => (
+              <NotificationItem
+                key={n.id}
+                id={n.id}
+                name={n.name}
+                message={n.message}
+                onClear={clearNotification}
+              />
+            ))}
+          </NotificationList>
+        </Column>
+      </Row>
+    </Container>
   )
 }
 
